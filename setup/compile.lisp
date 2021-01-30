@@ -40,6 +40,16 @@
 (let ((app-file (make-pathname :directory *build-dir* :defaults "lispapp")))
   ;; note that the buildpack's bin/release refers to this application name.
   (format t "~&* create slug's ./lispapp via save-application")
+  
+  #+sbcl
+  (save-lisp-and-die app-file
+                     :toplevel #'heroku-toplevel
+                     :executable t)
+  #+ccl
   (save-application app-file
-    :prepend-kernel t
-    :toplevel-function #'heroku-toplevel))
+                    :prepend-kernel t
+                    :toplevel-function #'heroku-toplevel)
+
+  #-(or ccl sbcl)
+  (error "Lisp implementation \"~A\" is not supported yet by the buildpack."
+         (lisp-implementation-type)))
