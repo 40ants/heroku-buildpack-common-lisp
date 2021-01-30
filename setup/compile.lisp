@@ -11,7 +11,9 @@
 (format t "~&  *buildpack-dir* = ~a" (make-pathname :directory *buildpack-dir*))
 
 ;;; Tell ASDF to store binaries in the cache dir.
-(ccl:setenv "XDG_CACHE_HOME" (concatenate 'string (getenv "CACHE_DIR") "/.asdf/"))
+(setf (uiop:setenv "XDG_CACHE_HOME")
+      (concatenate 'string (uiop:getenv "CACHE_DIR")
+                   "/.asdf/"))
 
 ;;; Notify ASDF that our build and cache dir is an awesome place to find asf files.
 (asdf:initialize-source-registry `(:source-registry
@@ -25,7 +27,7 @@
 
 ;;; Default toplevel, app can redefine.
 (defun heroku-toplevel ()
-  (initialize-application :port (parse-integer (getenv "PORT")))
+  (initialize-application :port (parse-integer (uiop:getenv "PORT")))
   (loop (sleep 600)))			;sleep forever
 
 (defvar *root* "/app")			;this is always the app root on Heroku now?
