@@ -1,7 +1,7 @@
 (in-package :cl-user)
 
 (flet ((env-to-dirs (x)
-         (pathname-directory (pathname (concatenate 'string (getenv x) "/")))))
+         (pathname-directory (pathname (concatenate 'string (uiop:getenv x) "/")))))
   (defvar *build-dir* (env-to-dirs "BUILD_DIR"))
   (defvar *cache-dir* (env-to-dirs "CACHE_DIR"))
   (defvar *buildpack-dir* (env-to-dirs "BUILDPACK_DIR")))
@@ -11,7 +11,7 @@
 (format t "~&  *buildpack-dir* = ~a" (make-pathname :directory *buildpack-dir*))
 
 ;;; Tell ASDF to store binaries in the cache dir.
-(setf (uiop:setenv "XDG_CACHE_HOME")
+(setf (uiop:getenv "XDG_CACHE_HOME")
       (concatenate 'string (uiop:getenv "CACHE_DIR")
                    "/.asdf/"))
 
